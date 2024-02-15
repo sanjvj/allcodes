@@ -1,0 +1,477 @@
+LOOP DETECTION USING FLOYD'S DETECTION:
+
+public class LinkedList {
+    //1.Node structure
+    static class Node {
+     int data;
+     Node next;
+     Node(int d) {
+     data = d;
+     next = null;
+     } }
+    //2.push operation
+    Node head;
+    void push(int newData) {
+     Node newNode = new Node(newData);
+     newNode.next = head;
+     head = newNode;
+    } 
+    //3.detect loop
+    void detectLoopAndPrint() {
+     Node slow = head, fast = head;
+     while (slow != null && fast != null 
+    && fast.next != null) {
+     slow = slow.next;
+     fast = fast.next.next;
+     if (slow == fast) {
+     System.out.println("Loop 
+    found");
+     return;
+     }
+     }
+     System.out.println("Loop not 
+    found");
+    }
+    //4.main method
+    public static void main(String[] args) {
+     LinkedList list = new LinkedList();
+     list.push(20);
+     list.push(41);
+     list.push(5);
+     list.push(10);
+     //5.Creating a loop for testing
+     list.head.next.next.next.next = list.head;
+     list.detectLoopAndPrint();
+    }
+}
+   
+
+
+SORT BITONIC DLL:
+
+class Main {
+    //1.node explanation
+    static class Node {
+        int data;
+        Node next;
+        Node prev;
+    }
+    //2.reverse function 
+    //input 1,2,3---3,2,1
+    static Node reverse(Node head_ref) {
+        Node temp = null;
+        Node current = head_ref;
+        while (current != null) {
+            temp = current.prev;
+            current.prev = current.next;
+            current.next = temp;
+            current = current.prev;
+        }
+        if (temp != null)
+            head_ref = temp.prev;
+        return head_ref;
+    }
+    //3.Merge operation
+    //list 1---2,5,8
+    //list 2---1,3,6
+    static Node merge(Node first, Node second) {
+        if (first == null)
+            return second;
+        if (second == null)
+            return first;
+        if (first.data < second.data) {
+            first.next = merge(first.next,
+                second);
+            if (first.next != null)
+                first.next.prev = first;
+            first.prev = null;
+            return first;
+        } else {
+            second.next = merge(first,
+                second.next);
+            if (second.next != null)
+                second.next.prev = second;
+            second.prev = null;
+            return second;
+        }
+    }
+    //4.sorted list----call reverse and merge 
+    function
+    static Node sort(Node head) {
+        if (head == null || head.next == null)
+            return head;
+        Node current = head.next;
+        while (current != null) {
+            if (current.data <
+                current.prev.data)
+                break;
+            current = current.next;
+        }
+        if (current == null)
+            return head;
+        current.prev.next = null;
+        current.prev = null;
+        current = reverse(current);
+        return merge(head, current);
+    }
+    //5.push 
+    static Node push(Node head_ref, int new_data) {
+        Node new_node = new Node();
+        new_node.data = new_data;
+        new_node.prev = null;
+        new_node.next = (head_ref);
+        if ((head_ref) != null)
+            (head_ref).prev = new_node;
+        (head_ref) = new_node;
+        return head_ref;
+    }
+    //6.print the list
+    static void printList(Node head) {
+        if (head == null){
+            System.out.println("Doubly Linked 
+                list empty ");
+                while (head != null) {
+                    System.out.print(head.data + " ");
+                    head = head.next;
+                }
+        }
+    }
+        //7.Main function
+    public static void main(String args[]) {
+            Node head = null;
+            // Create the doubly linked list:
+            head = push(head, 1);
+            head = push(head, 4);
+
+            head = push(head, 6);
+            head = push(head, 10);
+            head = push(head, 12);
+            head = push(head, 7);
+            head = push(head, 5);
+            head = push(head, 2);
+            System.out.println("Original List:");
+            printList(head);
+            head = sort(head);
+            System.out.println("\nSorted List:");
+            printList(head);
+    }
+}
+
+
+
+SEGGREGATE EVEN AND ODD NUMBERS:
+
+class Node {
+    int data;
+    Node next;
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+class LinkedList {
+    Node head;
+    public void append(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = newNode;
+    }
+    public void segregateEvenOdd() {
+        if (head == null) {
+            System.out.println("The list is 
+                empty.
+                ");
+                return;
+            }
+            Node evenHead = null, evenTail =
+                null;
+            Node oddHead = null, oddTail =
+                null;
+            Node current = head;
+            while (current != null) {
+                int data = current.data;
+                if (data % 2 == 0) { // even node
+                    if (evenHead == null) {
+                        evenHead = evenTail = current;
+                    } else {
+                        evenTail.next = current;
+                        evenTail = current;
+                    }
+                } else { // odd node
+                    if (oddHead == null) {
+                        oddHead = oddTail = current;
+                    } else {
+                        oddTail.next = current;
+                        oddTail = current;
+                    }
+                }
+                current = current.next;
+            }
+            // Join even and odd lists
+            if (evenHead != null) {
+                evenTail.next = oddHead;
+            }
+
+            if (oddHead != null) {
+                oddTail.next = null;
+            }
+            head = evenHead != null ? evenHead :
+                oddHead;
+        }
+        public void printList() {
+            Node current = head;
+            while (current != null) {
+                System.out.print(current.data +
+                    " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+    public class Main {
+        public static void main(String[] args) {
+            LinkedList list = new LinkedList();
+            list.append(1);
+            list.append(2);
+            list.append(3);
+            list.append(4);
+            list.append(5);
+            System.out.println("Original list:");
+            list.printList();
+            list.segregateEvenOdd();
+            System.out.println("Segregated list (even before odd):");
+            list.printList();
+        }
+    }
+
+
+
+MERGE SORT IN DLL:
+
+import java.util.*;
+//MERGE FUNCTION
+class Solution {
+    public static Node merge(Node head1,
+        Node head2) {
+        Node merged = new Node(-1);
+        Node temp = merged;
+        while (head1 != null && head2 != null) {
+            if (head1.data < head2.data) {
+                temp.next = head1;
+                if (temp.data != -1)
+                    head1.prev = temp;
+                head1 = head1.next;
+            } else {
+                temp.next = head2;
+                if (temp.data != -1)
+                    head2.prev = temp;
+                head2 = head2.next;
+
+            }
+            temp = temp.next;
+        }
+        while (head1 != null) {
+            temp.next = head1;
+            head1.prev = temp;
+            head1 = head1.next;
+            temp = temp.next;
+        }
+        while (head2 != null) {
+            temp.next = head2;
+            head2.prev = temp;
+            head2 = head2.next;
+            temp = temp.next;
+        }
+        return merged.next;
+    }
+    //2.FIND THE MID POINT
+    public static Node find_mid(Node head) {
+        Node slow = head, fast = head.next;
+        while (slow != null && fast !=
+            null) {
+            fast = fast.next;
+            if (fast == null)
+                break;
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
+    public static Node mergesort(Node head) {
+        if (head.next == null) {
+            return head;
+        }
+        Node mid = find_mid(head);
+        Node head1 = head;
+        Node head2 = mid.next;
+        mid.next = null;
+        head2.prev = null;
+        head1 = mergesort(head1);
+        head2 = mergesort(head2);
+        return merge(head1, head2);
+    }
+}
+//3.NODE 
+class Node {
+    int data;
+    Node next;
+    Node prev;
+    Node(int data) {
+        this.data = data;
+        next = null;
+        prev = null;
+    }
+}
+//4.LINKED LIST
+class LinkedList {
+    Node head;
+
+    void add(int data) {
+        Node new_node = new Node(data);
+        if (head == null) {
+            head = new_node;
+            return;
+        }
+        Node curr = head;
+        while (curr.next != null)
+            curr = curr.next;
+        curr.next = new_node;
+        new_node.prev = curr;
+    }
+}
+//5.MAIN FUNCTION
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        LinkedList a = new LinkedList();
+        for (int i = 0; i < n; i++) {
+            a.add(input.nextInt());
+        }
+        Solution Obj = new Solution();
+        a.head = Obj.mergesort(a.head);
+        Node h = a.head;
+        while (h != null) {
+            System.out.print(h.data + " ");
+            h = h.next;
+        }
+        System.out.println("");
+    }
+}
+
+
+
+MINIMUM STACK:
+
+SAMPLE PROGRAM 1
+
+INPUT
+
+stack.push(5);
+stack.push(2);
+stack.push(7);
+stack.push(1);
+int minElement = stack.getMin();
+stack.pop();
+int topElement = stack.top();
+int newMinElement = stack.getMin();
+
+OUTPUT
+
+Minimum Element: 1
+Top Element: 7
+After Pop New Minimum Element: 2
+
+
+
+
+CODE:
+
+
+import java.util.Stack;
+class MinStack {
+    Stack < Integer > stack; // Stack to store 
+    elements
+    Stack < Integer > minStack; // Stack to 
+    track minimum elements
+    public MinStack() {
+        stack = new Stack < > ();
+        minStack = new Stack < > ();
+    }
+    public void push(int element) {
+        stack.push(element); // Push the 
+        element onto the main stack
+        // Update the minimum stack
+        if (minStack.isEmpty() || element <=
+            minStack.peek()) {
+            minStack.push(element); // Push 
+            the element onto the minimum stack
+        }
+    }
+    public void pop() {
+        if (!stack.isEmpty()) {
+            int poppedElement = stack.pop();
+            // Pop from the main stack
+            // If the popped element is the 
+            current minimum, pop from the minimum stack
+            if (poppedElement ==
+                minStack.peek()) {
+                minStack.pop();
+            }
+        }
+    }
+    public int top() {
+        if (!stack.isEmpty()) {
+            return stack.peek(); // Return 
+            the top element of the main stack
+        }
+        // Stack is empty, return -1 or 
+        throw an exception as desired
+        return -1;
+    }
+    public int getMin() {
+        if (!minStack.isEmpty()) {
+            return minStack.peek(); // 
+            Return the minimum element from the minimum
+            stack
+        }
+        // Stack is empty, return -1 or 
+        throw an exception as desired
+        return -1;
+    }
+    public static void main(String[] args) {
+            MinStack stack = new MinStack();
+            // Push some elements onto the 
+            stack
+            stack.push(5);
+            stack.push(2);
+            stack.push(7);
+            stack.push(1);
+
+            // Retrieve and print the minimum element
+            int minElement = stack.getMin();
+            System.out.println("Minimum 
+                Element: " + minElement); // Output: 
+                Minimum Element: 1
+                // Pop an element from the stack
+                stack.pop();
+                // Retrieve and print the top 
+                element int topElement = stack.top(); System.out.println("Top Element: " +
+                    topElement); // Output: Top Element: 7
+                // After pop
+                int newMinElement = stack.getMin(); System.out.println("After Pop New 
+                    Minimum Element: " + newMinElement);
+                }
+            }
+
+
+
